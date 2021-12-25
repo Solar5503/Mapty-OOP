@@ -269,6 +269,8 @@ class App {
   }
 
   _moveToPopup(e) {
+    if (!this.#map) return;
+
     const workoutEl = e.target.closest('.workout');
     if (!workoutEl) return;
 
