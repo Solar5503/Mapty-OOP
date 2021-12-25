@@ -72,6 +72,7 @@ class App {
   #mapZoomLevel = 13;
   #mapEvent;
   #workouts = [];
+  #layers = [];
 
   constructor() {
     // Get user position
@@ -83,7 +84,7 @@ class App {
     // Attach event handlers
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
-    containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
+    containerWorkouts.addEventListener('click', this._editWorkout.bind(this));
   }
 
   _getPositon() {
@@ -201,7 +202,7 @@ class App {
   }
 
   _renderWorkoutMarker(workout) {
-    L.marker(workout.coords)
+    const layer = L.marker(workout.coords)
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -216,6 +217,7 @@ class App {
         `${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'} ${workout.description}`
       )
       .openPopup();
+    this.#layers.push(layer);
   }
 
   _renderWorkout(workout) {
@@ -268,22 +270,36 @@ class App {
     form.insertAdjacentHTML('afterend', html);
   }
 
-  _moveToPopup(e) {
+  _editWorkout(e) {
     if (!this.#map) return;
-
     const workoutEl = e.target.closest('.workout');
     if (!workoutEl) return;
+    let index = 0;
+    const workout = this.#workouts.find((work, i) => {
+      index = i;
+      return work.id === workoutEl.dataset.id;
+    });
 
-    const workout = this.#workouts.find(
-      (work) => work.id === workoutEl.dataset.id
-    );
-
+    // Move on current point of map
     this.#map.setView(workout.coords, 14, {
       animate: true,
       pan: {
         duration: 1,
       },
     });
+
+    // Show form with our coords
+    this.#mapEvent = {
+      latlng: {
+        lat: workout.coords[0],
+        lng: workout.coords[1],
+      },
+    };
+    this._showForm(this.#mapEvent);
+
+    //delete old workout and update UI
+    this.#workouts.splice(index, 1);
+    this._updateUI();
 
     // using the public interface
     // workout.click();
@@ -302,7 +318,21 @@ class App {
     });
   }
 
-  reset() {
+  _updateUI() {
+    containerWorkouts
+      .querySelectorAll('.workout')
+      .forEach((work) => work.remove());
+    this.#layers.forEach((layer) => {
+      layer.remove();
+    });
+
+    this.#workouts.forEach((work) => {
+      this._renderWorkout(work);
+      this._renderWorkoutMarker(work);
+    });
+  }
+
+  resetAllWorkots() {
     localStorage.removeItem('workouts');
     location.reload();
   }
