@@ -55,6 +55,26 @@ a:visited {
   margin-bottom: 4rem;
 }
 
+.sidebar__control {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0.7rem;
+  margin-right: 0;
+  border-bottom: 2px solid var(--color-light--1);
+}
+
+.sidebar__btn {
+  padding: 0.6rem 2rem;
+  font-size: 1.7rem;
+  cursor: pointer;
+  border: none;
+  margin: 0.7rem;
+  margin-right: 0;
+  border-radius: 1.5rem;
+  background: var(--color-dark--2);
+  color: var(--color-light--2);
+}
+
 .workouts {
   list-style: none;
   height: 77vh;
@@ -70,9 +90,8 @@ a:visited {
   background-color: var(--color-dark--2);
   border-radius: 5px;
   padding: 1.5rem 2.25rem;
+  padding-bottom: 0.7rem;
   margin-bottom: 1.75rem;
-  cursor: pointer;
-
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 0.75rem 1.5rem;
@@ -111,6 +130,27 @@ a:visited {
   color: var(--color-light--1);
   text-transform: uppercase;
   font-weight: 800;
+}
+
+.workout__control {
+  grid-column: 1/-1;
+  justify-self: center;
+  margin-top: 0.5rem;
+}
+
+.workout__btn {
+  padding: 0.6rem 1.5rem;
+  font-size: 1.7rem;
+  cursor: pointer;
+  border: none;
+  margin: 0.3rem 0.7rem;
+  border-radius: 1.5rem;
+  background: var(--color-dark--1);
+  color: var(--color-light--2);
+}
+
+.workout__btn:hover {
+  transform: scale(1.05);
 }
 
 .form {

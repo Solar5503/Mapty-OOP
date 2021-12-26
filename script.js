@@ -66,6 +66,7 @@ const inputDistance = document.querySelector('.form__input--distance');
 const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
+const clearAllBtn = document.querySelector('.sidebar__btn');
 
 class App {
   #map;
@@ -85,6 +86,11 @@ class App {
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
     containerWorkouts.addEventListener('click', this._editWorkout.bind(this));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !form.classList.contains('hidden'))
+        this._hideForm();
+    });
+    clearAllBtn.addEventListener('click', this.resetAllWorkots);
   }
 
   _getPositon() {
@@ -249,6 +255,12 @@ class App {
                 <span class="workout__value">${workout.cadence}</span>
                 <span class="workout__unit">spm</span>
               </div>
+              <div class="workout__control">
+                <button class="workout__btn workout__clear">Clear</button>
+                <button class="workout__btn workout__edit">Edit</button>
+                <button class="workout__btn workout__save">Save</button>
+                <button class="workout__btn workout__zoom">Zoom</button>
+              </div>
           </li>
       `;
 
@@ -263,6 +275,12 @@ class App {
                 <span class="workout__icon">⛰</span>
                 <span class="workout__value">${workout.elevationGain}</span>
                 <span class="workout__unit">m</span>
+              </div>
+              <div class="workout__control">
+                <button class="workout__btn workout__clear">Clear</button>
+                <button class="workout__btn workout__edit">Edit</button>
+                <button class="workout__btn workout__save">Save</button>
+                <button class="workout__btn workout__zoom">Zoom</button>
               </div>
             </li>
           `;
@@ -280,27 +298,30 @@ class App {
       return work.id === workoutEl.dataset.id;
     });
 
-    // Move on current point of map
-    this.#map.setView(workout.coords, 14, {
-      animate: true,
-      pan: {
-        duration: 1,
-      },
-    });
+    if (e.target.classList.contains('workout__zoom')) {
+      // Move on current point of map
+      this.#map.setView(workout.coords, 15, {
+        animate: true,
+        pan: {
+          duration: 1,
+        },
+      });
+    }
 
-    // Show form with our coords
-    this.#mapEvent = {
-      latlng: {
-        lat: workout.coords[0],
-        lng: workout.coords[1],
-      },
-    };
-    this._showForm(this.#mapEvent);
+    if (e.target.classList.contains('workout__clear')) {
+      //delete workout and update UI
+      this.#workouts.splice(index, 1);
+      this._setLocalStorage();
+      this._updateUI();
+    }
 
-    //delete old workout and update UI
-    this.#workouts.splice(index, 1);
-    this._updateUI();
+    if (e.target.classList.contains('workout__edit')) {
+      console.log('edit');
+    }
 
+    if (e.target.classList.contains('workout__save')) {
+      console.log('save');
+    }
     // using the public interface
     // workout.click();
   }

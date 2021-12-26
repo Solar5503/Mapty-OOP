@@ -32,7 +32,9 @@
   <body>
     <div class="sidebar">
       <img src="logo.png" alt="Logo" class="logo" />
-
+      <div class="sidebar__control">
+        <button class="sidebar__btn">Clear All</button>
+      </div>
       <ul class="workouts">
         <form class="form hidden">
           <div class="form__row">
@@ -92,9 +94,15 @@
             <span class="workout__value">178</span>
             <span class="workout__unit">spm</span>
           </div>
-        </li>
+          <div class="workout__control">
+            <button class="workout__btn workout__clear">Clear</button>
+            <button class="workout__btn workout__edit">Edit</button>
+            <button class="workout__btn workout__save">Save</button>
+            <button class="workout__btn workout__zoom">Zoom</button>
+          </div>
+        </li> -->
 
-        <li class="workout workout--cycling" data-id="1234567891">
+        <!-- <li class="workout workout--cycling" data-id="1234567891">
           <h2 class="workout__title">Cycling on April 5</h2>
           <div class="workout__details">
             <span class="workout__icon">🚴‍♀️</span>
