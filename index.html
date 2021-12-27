@@ -33,7 +33,7 @@
     <div class="sidebar">
       <img src="logo.png" alt="Logo" class="logo" />
       <div class="sidebar__control">
-        <button class="sidebar__btn">Clear All</button>
+        <button class="sidebar__btn">🗑 Clear All</button>
       </div>
       <ul class="workouts">
         <form class="form hidden">
@@ -69,7 +69,10 @@
               placeholder="meters"
             />
           </div>
-          <button class="form__btn">OK</button>
+          <div class="form__control">
+            <button class="form__btn form__btn--cancel">⛔ Cancel</button>
+            <button class="form__btn" type="submit">✅ Send</button>
+          </div>
         </form>
 
         <!-- <li class="workout workout--running" data-id="1234567890">
@@ -95,10 +98,8 @@
             <span class="workout__unit">spm</span>
           </div>
           <div class="workout__control">
-            <button class="workout__btn workout__clear">Clear</button>
-            <button class="workout__btn workout__edit">Edit</button>
-            <button class="workout__btn workout__save">Save</button>
-            <button class="workout__btn workout__zoom">Zoom</button>
+            <button class="workout__btn workout__btn--clear">🗑 Clear</button>
+            <button class="workout__btn workout__btn--edit">📝 Edit</button>
           </div>
         </li> -->
 
@@ -123,6 +124,10 @@
             <span class="workout__icon">⛰</span>
             <span class="workout__value">223</span>
             <span class="workout__unit">m</span>
+          </div>
+          <div class="workout__control">
+            <button class="workout__btn workout__clear">🗑 Clear</button>
+            <button class="workout__btn workout__edit">📝 Edit</button>
           </div>
         </li> -->
       </ul>

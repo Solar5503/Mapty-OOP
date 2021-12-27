@@ -60,7 +60,6 @@ a:visited {
   justify-content: flex-end;
   margin: 0.7rem;
   margin-right: 0;
-  border-bottom: 2px solid var(--color-light--1);
 }
 
 .sidebar__btn {
@@ -73,6 +72,10 @@ a:visited {
   border-radius: 1.5rem;
   background: var(--color-dark--2);
   color: var(--color-light--2);
+}
+
+.sidebar__btn:hover {
+  transform: scale(1.05);
 }
 
 .workouts {
@@ -90,8 +93,9 @@ a:visited {
   background-color: var(--color-dark--2);
   border-radius: 5px;
   padding: 1.5rem 2.25rem;
+  padding-right: 1rem;
   padding-bottom: 0.7rem;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 0.75rem 1.5rem;
@@ -132,24 +136,27 @@ a:visited {
   font-weight: 800;
 }
 
-.workout__control {
+.workout__control,
+.form__control {
   grid-column: 1/-1;
-  justify-self: center;
+  justify-self: right;
   margin-top: 0.5rem;
 }
 
-.workout__btn {
+.workout__btn,
+.form__btn {
   padding: 0.6rem 1.5rem;
-  font-size: 1.7rem;
+  font-size: 1.4rem;
   cursor: pointer;
   border: none;
-  margin: 0.3rem 0.7rem;
+  margin: 0.3rem 0.4rem;
   border-radius: 1.5rem;
   background: var(--color-dark--1);
   color: var(--color-light--2);
 }
 
-.workout__btn:hover {
+.workout__btn:hover,
+.form__btn:hover {
   transform: scale(1.05);
 }
 
@@ -157,15 +164,16 @@ a:visited {
   background-color: var(--color-dark--2);
   border-radius: 5px;
   padding: 1.5rem 2.75rem;
+  padding-bottom: 1rem;
   margin-bottom: 1.75rem;
-
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem 2.5rem;
-
-  /* Match height and activity boxes */
-  height: 9.25rem;
   transition: all 0.5s, transform 1ms;
+}
+
+.form__control {
+  margin-top: 1.5rem;
 }
 
 .form.hidden {
@@ -205,10 +213,6 @@ a:visited {
 .form__input:focus {
   outline: none;
   background-color: #fff;
-}
-
-.form__btn {
-  display: none;
 }
 
 .copyright {

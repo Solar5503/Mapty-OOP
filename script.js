@@ -67,6 +67,7 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 const clearAllBtn = document.querySelector('.sidebar__btn');
+const cancelBtn = document.querySelector('.form__btn--cancel');
 
 class App {
   #map;
@@ -91,6 +92,11 @@ class App {
         this._hideForm();
     });
     clearAllBtn.addEventListener('click', this.resetAllWorkots);
+    cancelBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      this._hideForm();
+      this._updateUI();
+    });
   }
 
   _getPositon() {
@@ -256,10 +262,8 @@ class App {
                 <span class="workout__unit">spm</span>
               </div>
               <div class="workout__control">
-                <button class="workout__btn workout__clear">Clear</button>
-                <button class="workout__btn workout__edit">Edit</button>
-                <button class="workout__btn workout__save">Save</button>
-                <button class="workout__btn workout__zoom">Zoom</button>
+                <button class="workout__btn workout__btn--clear">🗑 Clear</button>
+                <button class="workout__btn workout__btn--edit">📝 Edit</button>
               </div>
           </li>
       `;
@@ -277,10 +281,8 @@ class App {
                 <span class="workout__unit">m</span>
               </div>
               <div class="workout__control">
-                <button class="workout__btn workout__clear">Clear</button>
-                <button class="workout__btn workout__edit">Edit</button>
-                <button class="workout__btn workout__save">Save</button>
-                <button class="workout__btn workout__zoom">Zoom</button>
+                <button class="workout__btn workout__btn--clear">🗑 Clear</button>
+                <button class="workout__btn workout__btn--edit">📝 Edit</button>
               </div>
             </li>
           `;
@@ -298,7 +300,14 @@ class App {
       return work.id === workoutEl.dataset.id;
     });
 
-    if (e.target.classList.contains('workout__zoom')) {
+    if (e.target.classList.contains('workout__btn--clear')) {
+      //delete workout and update UI
+      this.#workouts.splice(index, 1);
+      this._setLocalStorage();
+      this._updateUI();
+    }
+
+    if (e.target.classList.contains('workout__btn--edit')) {
       // Move on current point of map
       this.#map.setView(workout.coords, 15, {
         animate: true,
@@ -308,20 +317,6 @@ class App {
       });
     }
 
-    if (e.target.classList.contains('workout__clear')) {
-      //delete workout and update UI
-      this.#workouts.splice(index, 1);
-      this._setLocalStorage();
-      this._updateUI();
-    }
-
-    if (e.target.classList.contains('workout__edit')) {
-      console.log('edit');
-    }
-
-    if (e.target.classList.contains('workout__save')) {
-      console.log('save');
-    }
     // using the public interface
     // workout.click();
   }
