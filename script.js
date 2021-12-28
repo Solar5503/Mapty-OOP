@@ -87,15 +87,10 @@ class App {
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
     containerWorkouts.addEventListener('click', this._editWorkout.bind(this));
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !form.classList.contains('hidden'))
-        this._hideForm();
-    });
     clearAllBtn.addEventListener('click', this.resetAllWorkots);
     cancelBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      this._hideForm();
-      this._updateUI();
+      location.reload();
     });
   }
 
@@ -315,6 +310,19 @@ class App {
           duration: 1,
         },
       });
+
+      // Show form with our coords
+      this.#mapEvent = {
+        latlng: {
+          lat: workout.coords[0],
+          lng: workout.coords[1],
+        },
+      };
+      this._showForm(this.#mapEvent);
+
+      //delete old workout and update UI
+      this.#workouts.splice(index, 1);
+      this._updateUI();
     }
 
     // using the public interface
