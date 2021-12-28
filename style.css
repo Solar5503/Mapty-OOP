@@ -57,9 +57,8 @@ a:visited {
 
 .sidebar__control {
   display: flex;
-  justify-content: flex-end;
-  margin: 0.7rem;
-  margin-right: 0;
+  justify-content: space-between;
+  margin: 0.7rem 0;
 }
 
 .sidebar__btn {

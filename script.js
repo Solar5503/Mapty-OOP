@@ -66,7 +66,9 @@ const inputDistance = document.querySelector('.form__input--distance');
 const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
-const clearAllBtn = document.querySelector('.sidebar__btn');
+const clearAllBtn = document.querySelector('.sidebar__btn--clearAll');
+const sortDistanceBtn = document.querySelector('.sidebar__btn--sortDistance');
+const sortTimeBtn = document.querySelector('.sidebar__btn--sortTime');
 const cancelBtn = document.querySelector('.form__btn--cancel');
 
 class App {
@@ -75,6 +77,8 @@ class App {
   #mapEvent;
   #workouts = [];
   #layers = [];
+  #sortedByDistance = false;
+  #sortedByTime = false;
 
   constructor() {
     // Get user position
@@ -91,6 +95,14 @@ class App {
     cancelBtn.addEventListener('click', (e) => {
       e.preventDefault();
       location.reload();
+    });
+    sortDistanceBtn.addEventListener('click', () => {
+      this._sort('distance', !this.#sortedByDistance);
+      this.#sortedByDistance = !this.#sortedByDistance;
+    });
+    sortTimeBtn.addEventListener('click', () => {
+      this._sort('time', !this.#sortedByTime);
+      this.#sortedByTime = !this.#sortedByTime;
     });
   }
 
@@ -359,6 +371,26 @@ class App {
   resetAllWorkots() {
     localStorage.removeItem('workouts');
     location.reload();
+  }
+
+  _sort(key, sort) {
+    containerWorkouts
+      .querySelectorAll('.workout')
+      .forEach((work) => work.remove());
+
+    if (key === 'distance') {
+      const workouts = sort
+        ? this.#workouts.slice().sort((a, b) => a.distance - b.distance)
+        : this.#workouts;
+      workouts.forEach((work) => this._renderWorkout(work));
+    }
+
+    if (key === 'time') {
+      const workouts = sort
+        ? this.#workouts.slice().sort((a, b) => a.duration - b.duration)
+        : this.#workouts;
+      workouts.forEach((work) => this._renderWorkout(work));
+    }
   }
 }
 
