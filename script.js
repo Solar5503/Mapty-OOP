@@ -70,6 +70,7 @@ const clearAllBtn = document.querySelector('.sidebar__btn--clearAll');
 const sortDistanceBtn = document.querySelector('.sidebar__btn--sortDistance');
 const sortTimeBtn = document.querySelector('.sidebar__btn--sortTime');
 const cancelBtn = document.querySelector('.form__btn--cancel');
+const messagesError = document.querySelectorAll('.form__message');
 
 class App {
   #map;
@@ -164,10 +165,6 @@ class App {
   }
 
   _newWorkout(e) {
-    const validInputs = (...inputs) =>
-      inputs.every((inp) => Number.isFinite(inp));
-    const allPositive = (...inputs) => inputs.every((inp) => inp > 0);
-
     e.preventDefault();
 
     // Get data from form
@@ -183,10 +180,11 @@ class App {
 
       // Check if data is valid
       if (
-        !validInputs(distance, duration, cadence) ||
-        !allPositive(distance, duration, cadence)
+        !this._checkInput(distance, inputDistance) ||
+        !this._checkInput(duration, inputDuration) ||
+        !this._checkInput(cadence, inputCadence)
       )
-        return alert('Inputs have to be positive numbers !');
+        return;
 
       workout = new Running([lat, lng], distance, duration, cadence);
     }
@@ -196,10 +194,11 @@ class App {
       const elevation = +inputElevation.value;
 
       if (
-        !validInputs(distance, duration, elevation) ||
-        !allPositive(distance, duration)
+        !this._checkInput(distance, inputDistance) ||
+        !this._checkInput(duration, inputDuration) ||
+        !this._checkInput(elevation, inputElevation)
       )
-        return alert('Inputs have to be positive numbers !');
+        return;
 
       workout = new Cycling([lat, lng], distance, duration, elevation);
     }
@@ -218,6 +217,31 @@ class App {
 
     // Set local storage to all workouts
     this._setLocalStorage();
+  }
+
+  _checkInput(input, inputName) {
+    if (
+      !(Number.isFinite(input) && input > 0) &&
+      !inputName.classList.contains('form__input--elevation')
+    ) {
+      inputName.classList.add('form__input--error');
+      inputName.nextElementSibling.style.visibility = 'visible';
+      return false;
+    } else {
+      if (
+        inputName.classList.contains('form__input--elevation') &&
+        !Number.isFinite(input)
+      ) {
+        inputName.classList.add('form__input--error');
+        inputName.nextElementSibling.style.visibility = 'visible';
+        return false;
+      }
+
+      inputName.classList.remove('form__input--error');
+      inputName.nextElementSibling.style.visibility = 'hidden';
+      inputName.classList.add('form__input--success');
+      return true;
+    }
   }
 
   _renderWorkoutMarker(workout) {
