@@ -328,6 +328,10 @@ class App {
 
   _editWorkout(e) {
     if (!this.#map) return;
+
+    // Write clicks to local storage
+    this._setLocalStorage();
+
     const workoutEl = e.target.closest('.workout');
     if (!workoutEl) return;
     let index = 0;
@@ -367,7 +371,7 @@ class App {
     }
 
     // using the public interface
-    // workout.click();
+    workout.click();
   }
 
   _setLocalStorage() {
@@ -377,6 +381,17 @@ class App {
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem('workouts'));
     if (!data) return;
+
+    // Join prototypes of objects from local storage with prototype of classes
+    data.forEach((work) => {
+      if (work.type === 'running') {
+        work.__proto__ = Object.create(Running.prototype);
+      }
+      if (work.type === 'cycling') {
+        work.__proto__ = Object.create(Cycling.prototype);
+      }
+    });
+
     this.#workouts = data;
     this.#workouts.forEach((work) => {
       this._renderWorkout(work);
