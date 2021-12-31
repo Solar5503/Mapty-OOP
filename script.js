@@ -70,7 +70,6 @@ const clearAllBtn = document.querySelector('.sidebar__btn--clearAll');
 const sortDistanceBtn = document.querySelector('.sidebar__btn--sortDistance');
 const sortTimeBtn = document.querySelector('.sidebar__btn--sortTime');
 const cancelBtn = document.querySelector('.form__btn--cancel');
-const messagesError = document.querySelectorAll('.form__message');
 
 class App {
   #map;
@@ -112,7 +111,8 @@ class App {
       navigator.geolocation.getCurrentPosition(
         this._loadMap.bind(this),
         function () {
-          alert('Could not get your position!');
+          document.getElementById('map').innerText =
+            '❌  Could not get your position!';
         }
       );
     }
@@ -157,6 +157,11 @@ class App {
     form.style.display = 'none';
     form.classList.add('hidden');
     setTimeout(() => (form.style.display = 'grid'), 1000);
+
+    inputDistance.classList.remove('form__input--success');
+    inputDuration.classList.remove('form__input--success');
+    inputCadence.classList.remove('form__input--success');
+    inputElevation.classList.remove('form__input--success');
   }
 
   _toggleElevationField() {
