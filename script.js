@@ -121,11 +121,25 @@ class App {
   _loadMap(position) {
     const { latitude } = position.coords;
     const { longitude } = position.coords;
-    //   console.log(`https://www.google.ru/maps/@${latitude},${longitude}`);
-
     const coords = [latitude, longitude];
 
-    this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
+    // Check if is there workouts then set map to average position
+    if (this.#workouts.length === 0)
+      this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
+    else {
+      let latAverage = 0;
+      let lngAverage = 0;
+      this.#workouts.forEach((work) => {
+        latAverage += work.coords[0];
+        lngAverage += work.coords[1];
+      });
+      latAverage = parseFloat((latAverage / this.#workouts.length).toFixed(2));
+      lngAverage = parseFloat((lngAverage / this.#workouts.length).toFixed(2));
+      this.#map = L.map('map').setView(
+        [latAverage, lngAverage],
+        this.#mapZoomLevel
+      );
+    }
 
     L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
       attribution:
