@@ -123,18 +123,34 @@ class App {
     const { longitude } = position.coords;
     const coords = [latitude, longitude];
 
-    // Check if is there workouts then set map to average position
     if (this.#workouts.length === 0)
       this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
+    // Check if is there workouts then set map to average position
     else {
       let latAverage = 0;
       let lngAverage = 0;
+      let maxLat = -Infinity;
+      let maxLng = -Infinity;
+      let minLat = Infinity;
+      let minLng = Infinity;
       this.#workouts.forEach((work) => {
         latAverage += work.coords[0];
         lngAverage += work.coords[1];
+
+        // Calc max and min coords
+        if (work.coords[0] > maxLat) maxLat = work.coords[0];
+        if (work.coords[1] > maxLng) maxLng = work.coords[1];
+        if (work.coords[0] < minLat) minLat = work.coords[0];
+        if (work.coords[1] < minLng) minLng = work.coords[1];
       });
       latAverage = parseFloat((latAverage / this.#workouts.length).toFixed(2));
       lngAverage = parseFloat((lngAverage / this.#workouts.length).toFixed(2));
+
+      // To accommodate all workouts on map
+      if (maxLat - minLat >= 0.086 || maxLng - minLng >= 0.2)
+        this.#mapZoomLevel = 12;
+
+      // Set map to average position
       this.#map = L.map('map').setView(
         [latAverage, lngAverage],
         this.#mapZoomLevel
