@@ -354,22 +354,22 @@ class App {
       return work.id === workoutEl.dataset.id;
     });
 
+    // Move on current point of map
+    this.#map.setView(workout.coords, 15, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+    });
+
     if (e.target.classList.contains('workout__btn--clear')) {
-      //delete workout and update UI
+      //delete workout and reload
       this.#workouts.splice(index, 1);
       this._setLocalStorage();
-      this._updateUI();
+      location.reload();
     }
 
     if (e.target.classList.contains('workout__btn--edit')) {
-      // Move on current point of map
-      this.#map.setView(workout.coords, 15, {
-        animate: true,
-        pan: {
-          duration: 1,
-        },
-      });
-
       // Show form with our coords
       this.#mapEvent = {
         latlng: {
