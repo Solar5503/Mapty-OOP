@@ -405,6 +405,7 @@ class App {
     this.#layers.forEach((layer) => {
       layer.remove();
     });
+    this.#layers = [];
 
     this.#workouts.forEach((work) => {
       this._renderWorkout(work);
