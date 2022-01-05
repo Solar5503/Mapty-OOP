@@ -91,7 +91,11 @@ class App {
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
     containerWorkouts.addEventListener('click', this._editWorkout.bind(this));
-    clearAllBtn.addEventListener('click', this.resetAllWorkots);
+    clearAllBtn.addEventListener('click', () => {
+      this.resetAllWorkots();
+      speechSynthesis.cancel();
+      this.pronounceSentence(`All workouts deleted`);
+    });
     cancelBtn.addEventListener('click', (e) => {
       e.preventDefault();
       location.reload();
@@ -99,10 +103,14 @@ class App {
     sortDistanceBtn.addEventListener('click', () => {
       this._sort('distance', !this.#sortedByDistance);
       this.#sortedByDistance = !this.#sortedByDistance;
+      speechSynthesis.cancel();
+      this.pronounceSentence(`Sorted by distance`);
     });
     sortTimeBtn.addEventListener('click', () => {
       this._sort('time', !this.#sortedByTime);
       this.#sortedByTime = !this.#sortedByTime;
+      speechSynthesis.cancel();
+      this.pronounceSentence(`Sorted by time`);
     });
   }
 
@@ -252,6 +260,9 @@ class App {
 
     // Set local storage to all workouts
     this._setLocalStorage();
+
+    // Pronounce create workout
+    this.pronounceSentence(`Workout created or changed`);
   }
 
   _checkInput(input, inputName) {
@@ -357,11 +368,6 @@ class App {
   }
 
   _editWorkout(e) {
-    if (!this.#map) return;
-
-    // Write clicks to local storage
-    this._setLocalStorage();
-
     const workoutEl = e.target.closest('.workout');
     if (!workoutEl) return;
     let index = 0;
@@ -378,14 +384,46 @@ class App {
       },
     });
 
+    // Pronounce workout
+    if (workout.type === 'running') {
+      speechSynthesis.cancel();
+      this.pronounceSentence(workout.description);
+      this.pronounceSentence(`distance ${workout.distance} kilometers`);
+      this.pronounceSentence(`duration ${workout.duration} minutes`);
+      this.pronounceSentence(
+        `pace ${workout.pace.toFixed(1)} minutes per kilometer`
+      );
+      this.pronounceSentence(`cadence ${workout.cadence} steps per minute`);
+    }
+    if (workout.type === 'cycling') {
+      speechSynthesis.cancel();
+      this.pronounceSentence(workout.description);
+      this.pronounceSentence(`distance ${workout.distance} kilometers`);
+      this.pronounceSentence(`duration ${workout.duration} minutes`);
+      this.pronounceSentence(
+        `speed ${workout.speed.toFixed(1)} kilometers per hour`
+      );
+      this.pronounceSentence(`elevation gain ${workout.elevationGain} meters`);
+    }
+
+    //delete workout and reload
     if (e.target.classList.contains('workout__btn--clear')) {
-      //delete workout and reload
+      // Pronounce delete workout
+      speechSynthesis.cancel();
+      this.pronounceSentence(`Workout deleted`);
+
       this.#workouts.splice(index, 1);
       this._setLocalStorage();
       location.reload();
     }
 
+    // Edit workout
     if (e.target.classList.contains('workout__btn--edit')) {
+      speechSynthesis.cancel();
+
+      // Delete old workout
+      this.#workouts.splice(index, 1);
+
       // Show form with our coords
       this.#mapEvent = {
         latlng: {
@@ -394,9 +432,6 @@ class App {
         },
       };
       this._showForm(this.#mapEvent);
-
-      //delete old workout and update UI
-      this.#workouts.splice(index, 1);
       this._updateUI();
     }
 
@@ -466,6 +501,19 @@ class App {
         : this.#workouts;
       workouts.forEach((work) => this._renderWorkout(work));
     }
+  }
+
+  pronounceSentence(text) {
+    // Init speech synthes
+    const sentence = new SpeechSynthesisUtterance();
+    // Correction of pronunciation in English
+    sentence.lang = 'en-US';
+    // phrase pronunciation speed
+    sentence.rate = 0.7;
+    // Set text
+    sentence.text = text;
+    // Speak text
+    speechSynthesis.speak(sentence);
   }
 }
 
